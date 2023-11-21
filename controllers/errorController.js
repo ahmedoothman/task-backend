@@ -6,11 +6,29 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-    const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+    // Check if err or errmsg is undefined
+    if (!err || !err.errmsg) {
+        return new AppError(
+            'Duplicate field value. Please use another value!',
+            400
+        );
+    }
+
+    // Using a safer method to extract the value causing the duplication error
+    const match = err.errmsg.match(/(["'])(\\?.)*?\1/);
+
+    // Check if match is null or undefined before accessing its index
+    if (!match || !match[0]) {
+        return new AppError(
+            'Duplicate field value. Please use another value!',
+            400
+        );
+    }
+
+    const value = match[0];
     const message = `Duplicate field value: ${value}. Please use another value!`;
     return new AppError(message, 400);
 };
-
 const handleValidationErrorDB = (err) => {
     const errors = Object.values(err.errors).map((el) => el.message);
     const message = `Invalid input data. ${errors.join('. ')}`;
