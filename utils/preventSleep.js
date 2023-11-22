@@ -7,7 +7,7 @@ exports.preventSleep = () => {
     const url = hostUrl;
     setInterval(() => {
         axios
-            .get(url + '/quiz')
+            .get(url + '/api/quiz')
             .then((response) => {
                 console.log('🤓➡️ : preventing sleep... 😉');
             })
